@@ -10,8 +10,8 @@ exports.public = function(app){
 
 exports.private = function(app){
 
-	app.get('/hello2',(req,res)=>{
-		res.json({message:"Hello "+req.session.google_data.given_name+`<br><img src="${req.session.google_data.picture}">`})
+	app.get('/profile',(req,res)=>{
+		res.json({src:req.session.google_data.picture})
 	})
 
 }
