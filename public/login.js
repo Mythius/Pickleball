@@ -1,7 +1,7 @@
 async function signIn() {
     let req = await googleAuth();
     await req.loginSuccess;
-    loadProfile();
+    location.href='/tournament.html';
   }
   async function loadProfile() {
     if (auth_token) {

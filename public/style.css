@@ -16,6 +16,14 @@ body{
     display: block;
 }
 
+.title{
+    display: inline;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+}
+
 .icon{
     max-width: 80px;
     height: 50%;
@@ -50,6 +58,9 @@ body{
     text-align: center;
     width: 100%;
     height: calc(100% - 4em);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 #google-sign-in{
@@ -59,4 +70,30 @@ body{
     bottom: 4em;
     left: 50%;
     transform: translateX(-50%);
+}
+
+div.game{
+    background: white;
+    border-radius: 10px;
+    color: black;
+    width: 80%;
+    display: grid;
+    grid-template-columns: 75% 25%;
+    margin-top: 10px;
+}
+
+.game-content{
+    padding: 5px;
+}
+
+.game>div>div{
+    border-right: 1px solid black;
+    padding: 10px;
+}
+.game>div>div:first-child{
+    border-bottom: 1px solid black;
+}
+
+.game>div:last-child{
+    padding: 20px;
 }
