@@ -10,6 +10,7 @@
     <script src="jwt-decode.min.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
     <div class="topbar">
       <div class="logo">
@@ -20,9 +21,31 @@
         <img class="icon" src="profile.png" alt="" />
       </div>
     </div>
+    <nav class="closed">
+      <img src="close.png" alt="" />
+      <a href="tourneys.html">My Tournaments</a>
+      <a href="tournament.html">Upcoming Games</a>
+      <a href="history.html">Game History</a>
+      <a href="logout.html">Logout</a>
+    </nav>
     <div class="main">
-        
+      <div class="result win">
+        <div>Match 1</div>
+        <div>6 - 11</div>
+        <div>Won</div>
+      </div>
+      <div class="result win">
+        <div>Match 2</div>
+        <div>10 - 12</div>
+        <div>Won</div>
+      </div>
+      <div class="result lose">
+        <div>Match 3</div>
+        <div>11 - 8</div>
+        <div>Lost</div>
+      </div>
     </div>
     <script src="login.js"></script>
+    <script src="nav.js"></script>
   </body>
 </html>
