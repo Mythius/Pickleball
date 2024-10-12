@@ -4,8 +4,9 @@
 
 body {
   margin: 0;
-  background: #aaa;
+  background: url(background2.png) repeat;
   overflow: hidden;
+
 }
 
 .topbar {

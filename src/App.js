@@ -1,13 +1,16 @@
-import './App.css';
-import NavigationBar from './components/NavigationBar/NavigationBar'
-import Menu from './components/menu/menu';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+import Home from "./pages/Home";
+import Tournament from './pages/Tournament';
 
 function App() {
   return (
-    <div>
-      <NavigationBar/>
-      <Menu/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/tournament" element={<Tournament />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
