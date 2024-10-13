@@ -1,7 +1,7 @@
 var auth_token = localStorage.getItem('auth_token');
 async function login(username, password) {
     let authorization = JSON.stringify({ username, password });
-    let req = await fetch('/auth', { method: 'POST', headers: { authorization } });
+    let req = await fetch('https://backend.msouthwick.com/auth', { method: 'POST', headers: { authorization } });
     let dat = await req.json();
     auth_token = dat.token;
     return JSON.stringify(dat);
@@ -11,7 +11,7 @@ async function request(url, data = {}) {
     if (!data.headers) data.headers = {};
     if (!data.headers['Content-Type']) data.headers['Content-Type'] = 'application/json';
     if (!data.headers.authorization) data.headers.authorization = auth_token;
-    let req = await fetch(url, data);
+    let req = await fetch('https://backend.msouthwick.com'+url, data);
     return await req.json();
 }
 function googleAuth() {
@@ -37,7 +37,7 @@ function googleAuth() {
 }
 async function loginGoogle(data){
     let authorization = JSON.stringify(data);
-    let req = await fetch('/google-signin',{method:'POST',headers:{authorization}});
+    let req = await fetch('https://backend.msouthwick.com/google-signin',{method:'POST',headers:{authorization}});
     let dat = await req.json();
     auth_token = dat.token;
     localStorage.setItem('auth_token',auth_token);
