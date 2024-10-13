@@ -1,4 +1,3 @@
-
 var auth_token = localStorage.getItem('auth_token');
 async function login(username, password) {
     let authorization = JSON.stringify({ username, password });

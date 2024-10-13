@@ -10,10 +10,10 @@ const menu = () => {
   return (
     <nav className="closed">
       <img src={closeButton} alt="" onClick={closeMenu}/>
-      <a href="tourneys.html">My Tournaments</a>
+      <a href="/my-tourneys">My Tournaments</a>
       <a href="/tournament">Upcoming Games</a>
-      <a href="history.html">Game History</a>
-      <a href="logout.html">Logout</a>
+      <a href="/history">Game History</a>
+      <a href="/logout">Logout</a>
     </nav>
   );
 };
