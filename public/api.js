@@ -17,7 +17,7 @@ async function request(url, data = {}) {
 function googleAuth() {
     return new Promise((res, rej) => {
         window.google.accounts.id.initialize({
-            client_id: "1016767921529-7km6ac8h3cud3256dqjqha6neiufn2om.apps.window.usercontent.com",
+            client_id: "1016767921529-7km6ac8h3cud3256dqjqha6neiufn2om.apps.googleusercontent.com",
             callback: handleCredentialResponse,
             scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
         });
