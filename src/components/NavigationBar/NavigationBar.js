@@ -3,25 +3,16 @@ import PropTypes from "prop-types";
 import menuBar from "./3lines.svg";
 import profile from "./profile.png";
 import "./NavigationBar.css";
+import loadProfile from '../googleSignIn/autoLogin';
 
 const NavigationBar = () => {
 
-  async function loadProfile() {
-    if (window.auth_token) {
-      let profile = await window.request("/profile");
-      if(profile.src == undefined) return;
-      document.querySelector(".userProfile img").src = profile.src;
-      if (window.location.pathname == "/" || window.location.pathname == "index.html") {
-        window.location.href = "/tournament";
-      }
-    }
-  }
-
-  loadProfile();
 
   const toggleMenu = () => {
     document.querySelector('nav')?.classList.remove('closed');
   };
+
+  loadProfile();
 
   return (
     <div className="topbar">

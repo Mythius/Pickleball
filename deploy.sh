@@ -1,4 +1,6 @@
 #!/bin/bash
+rm -rf build
+npm run build
 ssh matthias@web260.msouthwick.com << ENDSSH
 rm -rf startup-frontend/public
 mkdir -p startup-frontend/public

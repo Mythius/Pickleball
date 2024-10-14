@@ -1,11 +1,13 @@
 import React from 'react';
 import './googleSignIn.css';
 import google from './google.png';
+import loadProfile from './autoLogin';
 
 const GoogleSignIn = () =>{
   async function signIn(){
     let req = await window.googleAuth();
     await req.loginSuccess;
+    await loadProfile();
   }
 
   return (
