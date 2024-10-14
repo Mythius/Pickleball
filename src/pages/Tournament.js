@@ -1,6 +1,7 @@
 import NavigationBar from "../components/NavigationBar/NavigationBar";
 import ScheduledGame from "../components/ScheduledGame/ScheduledGame";
 import Menu from "../components/menu/menu";
+import Footer from "../components/Footer/Footer";
 
 const Tournament = () => {
   let games = [
@@ -32,6 +33,7 @@ const Tournament = () => {
         <NavigationBar />
         <Menu />
         {generateGames()}
+        <Footer />
       </div>
     </div>
   );
