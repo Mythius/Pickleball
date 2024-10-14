@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import "./ScheduledGame.css";
 
 const ScheduledGame = (props) => {
-  let vars;
   return (
     <div className="ScheduledGame">
       <div className="game">
