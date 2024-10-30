@@ -11,7 +11,9 @@ const API = require('./api.js');
 const { file, fs } = require('./file.js');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(google_client_id);
+const cors = require('cors');
 
+app.use(cors());
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -98,6 +100,7 @@ app.post('/google-signin', async (req, res) => {
 
 API.public(app);
 
+
 app.use(function(req, res, next) {
     if (!req.headers.authorization) return res.status(403).json({ error: 'No credentials Sent' });
     if (!(req.headers.authorization in sessions)) return res.status(403).json({ error: 'Invalid Token' });
@@ -121,3 +124,4 @@ app.post('/newuser', (req, res) => {
 });
 
 API.private(app);
+
