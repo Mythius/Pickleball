@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="api.js"></script>
+  </head>
+  <body>
+    <div>
+      <button onclick="make_tourney(this)">Create Tournament</button>
+    </div>
+    
+    <div>
+      <button onclick="see_tourneys(this)">See Tournaments</button>
+    </div>
+
+    <div><button onclick="join_tourney(this)">Join Tournament</button></div>
+    <div><button onclick="seeTournament(this)">See Tournament</button></div>
+    <div><button onclick="startTournament(this)">Start Tournament</button></div>
+
+    <script>
+      let username = "test";
+      let pass = "test";
+
+      let tournament;
+
+      async function main() {
+        await login(username, pass);
+      }
+
+      function make_tourney(e) {
+        request("/tournament", {
+          method: "POST",
+          body: JSON.stringify({ name: "Test1", type: "single" }),
+        }).then(data=>{
+          e.parentElement.innerHTML += JSON.stringify(data);
+        });
+      }
+
+      async function see_tourneys(e){
+        let data = await request('/tournaments');
+        e.parentElement.innerHTML += JSON.stringify(data);
+        tournament = data[0].id;
+      }
+
+      let i = 1;
+      async function join_tourney(e){
+        let name = `Team ${i++}`;
+        let data = await request(`/join-tournament/${tournament}/${name}`,{method:'POST'});
+        e.parentElement.innerHTML += JSON.stringify(data);
+      }
+
+      async function seeTournament(e){
+        let data = await request('/tournaments/'+tournament);
+        e.parentElement.innerHTML += JSON.stringify(data);
+      }
+
+      async function startTournament(e){
+        let data = await request('/start-tournament/'+tournament,{method:'POST'});
+        e.parentElement.innerHTML += JSON.stringify(data);
+      }
+
+      main();
+    </script>
+  </body>
+</html>

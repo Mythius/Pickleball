@@ -3,3 +3,4 @@ auth.json
 package-lock.json
 /.vscode
 build/*
+db.json

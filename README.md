@@ -18,3 +18,11 @@ So As I did most of the CSS last time, and after discussing this with Dr. Clemen
 ## React Branch
 All of the changes I have made in converting my project to react are in the React branch on github see https://github.com/Mythius/Pickleball/tree/react for the latest code.
 The live demo is currently being deployed from the react build. 
+
+## Nov 9 Updates
+The react branch is the main branch for my Front End Service, and I have changed the main branch to be the Back-end Service. This last week I have been updating the backend service to have the Tournament Data structure and apis, and I will continue designing the front end service after I have all the back-end api in place. 
+
+The backend service is requires authentication, and is ready and availiable to respond to requests from the fornt end. The front end service will not be served from the back end, but intead will be served from a seperate server. 
+
+Currently My backend service is live at https://backend.msouthwick.com/. 
+My front end service is alive https://startup.web260.msouthwick.com/
