@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "./Tournament.css";
 import pencil from "./pencil.png";
 import trash from "./trash.png";
+import join from './join.png';
 
 const Tournament = ({ name, id }) => {
   async function deleteTournament(){
@@ -13,6 +14,7 @@ const Tournament = ({ name, id }) => {
     <div className="Tournament">
       {name}
       <right>
+        <img src={join} />
         <img src={pencil} />
         <img onClick={deleteTournament} src={trash} />
       </right>
