@@ -11,7 +11,6 @@ const MyTourneys = () => {
 
   async function addTournament() {
     let name = await createPromptBox("Enter Tournament Name");
-    alert(name);
     let data = window.request("/tournament", {
       method: "POST",
       body: JSON.stringify({ name }),
