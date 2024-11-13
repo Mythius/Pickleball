@@ -1,0 +1,14 @@
+.Tournament {
+    width: 60%;
+    background-color: antiquewhite;
+    padding: 10px;
+    margin: 10px;
+}
+.Tournament img{
+    width: 18px;
+    margin-right: 10px;
+}
+
+.Tournament right{
+    float: right;
+}

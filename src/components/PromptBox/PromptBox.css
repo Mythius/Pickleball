@@ -1,0 +1,33 @@
+.PromptBox {
+    background-color:aliceblue;
+    width: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: flex;
+    /* padding: 10px; */
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+    padding: 20px;
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+.PromptBox button,.PromptBox input{
+    height: 70%;
+    border: 0;
+}
+
+.PromptBox input{
+    border-bottom: 1px solid black;
+    background: none;
+    outline: 0;
+}
+
+.PromptBox button{
+    width: 100%;
+    padding: 10px;
+}
