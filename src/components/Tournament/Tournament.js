@@ -7,7 +7,7 @@ import join from './join.png';
 
 const Tournament = ({ name, id }) => {
   async function deleteTournament(){
-    let req = window.request('/tournament',{method:'DELETE',body:JSON.stringify({id})});
+    let req = window.request('/tournament/'+id,{method:'DELETE'});
     console.log(req);
   }
   return (
