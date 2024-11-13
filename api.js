@@ -55,6 +55,10 @@ exports.public = function (app) {
 };
 
 exports.private = function (app) {
+
+  app.get('/profile',(req,res)=>{
+    res.send({src:req.session.google_data.picture})
+  });
   // Create a new tournament
   app.post("/tournament", (req, res) => {
     let data = req.body;
