@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import menuBar from "./3lines.svg";
 import profile from "./profile.png";
 import "./NavigationBar.css";
@@ -15,7 +14,7 @@ const NavigationBar = () => {
   return (
     <div className="topbar">
       {
-        (window.location.pathname == "/" ? (
+        (window.location.pathname === "/" && window.location.host != 'localhost:3000' ? (
           ""
         ) : (
           <div className="logo">
@@ -30,7 +29,5 @@ const NavigationBar = () => {
     </div>
   );
 };
-
-NavigationBar.propTypes = {};
 
 export default NavigationBar;
