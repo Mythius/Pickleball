@@ -7,30 +7,56 @@ import { useEffect, useState } from "react";
 import Tournament from "../components/Tournament/Tournament";
 
 const MyTourneys = () => {
-  let [tournaments, uT] = useState("");
+  const [tournaments, setTournaments] = useState([]); // Set initial state to an array
 
-  async function addTournament() {
-    let name = await createPromptBox("Enter Tournament Name");
-    let data = window.request("/tournament", {
-      method: "POST",
-      body: JSON.stringify({ name }),
-    });
-    console.log(data);
+  // Function to fetch tournaments from the API
+  async function fetchTournaments() {
+    try {
+      const response = await window.request("/tournaments");
+      if (response && Array.isArray(response)) {
+        setTournaments(response); // Assuming the response is an array
+      } else {
+        console.error("Failed to load tournaments:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching tournaments:", error);
+    }
   }
 
-  useEffect(() => {
-    window.request("/tournaments").then((data) => {
-      uT(() => {
-        return data.map((e) => <Tournament name={e.name} id={e.id} />);
+  // Function to handle adding a tournament
+  async function addTournament() {
+    try {
+      // Prompt for the tournament name
+      let name = await createPromptBox("Enter Tournament Name");
+
+      // Make the POST request to add the tournament
+      let response = await window.request("/tournament", {
+        method: "POST",
+        body: JSON.stringify({ name }),
       });
-    });
-  });
+
+      fetchTournaments();
+    } catch (error) {
+      console.error("Error adding tournament:", error);
+    }
+  }
+
+  // Fetch tournaments when the component mounts
+  useEffect(() => {
+    fetchTournaments();
+  }, []); // Empty dependency array to only run once when the component mounts
 
   return (
     <>
       <NavigationBar />
       <Menu />
-      <div className="main">{tournaments}</div>
+      <div className="main">
+        {tournaments.length > 0 ? (
+          tournaments.map((e) => <Tournament key={e.id} name={e.name} id={e.id} />)
+        ) : (
+          <p>No tournaments available.</p>
+        )}
+      </div>
       <AddButton onClick={addTournament} />
       <Footer />
     </>
