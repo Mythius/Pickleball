@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="api.js"></script>
+    <style>
+      td{
+        border: 1px solid black;
+      }
+    </style>
   </head>
   <body>
     <div>
       <button onclick="make_tourney(this)">Create Tournament</button>
     </div>
-    
+
     <div>
       <button onclick="see_tourneys(this)">See Tournaments</button>
     </div>
@@ -19,9 +24,23 @@
     <div><button onclick="seeTournament(this)">See Tournament</button></div>
     <div><button onclick="startTournament(this)">Start Tournament</button></div>
 
+    <table id="currentBracket"></table>
+
     <script>
+      Node.prototype.on=function(a,b,c){this.addEventListener(a,b,c)};
+      function create(el, text = "") {
+        let e = document.createElement(el);
+        e.innerHTML = text;
+        return e;
+      }
+
       let username = "test";
       let pass = "test";
+
+      const obj = (id) => document.querySelector(id);
+
+      
+      let table = obj("#currentBracket");
 
       let tournament;
 
@@ -33,33 +52,61 @@
         request("/tournament", {
           method: "POST",
           body: JSON.stringify({ name: "Test1", type: "single" }),
-        }).then(data=>{
+        }).then((data) => {
           e.parentElement.innerHTML += JSON.stringify(data);
         });
       }
 
-      async function see_tourneys(e){
-        let data = await request('/tournaments');
+      async function see_tourneys(e) {
+        let data = await request("/tournaments");
         e.parentElement.innerHTML += JSON.stringify(data);
         tournament = data[0].id;
       }
 
       let i = 1;
-      async function join_tourney(e){
+      async function join_tourney(e) {
         let name = `Team ${i++}`;
-        let data = await request(`/join-tournament/${tournament}/${name}`,{method:'POST'});
+        let data = await request(`/join-tournament/${tournament}/${name}`, {
+          method: "POST",
+        });
         e.parentElement.innerHTML += JSON.stringify(data);
       }
 
-      async function seeTournament(e){
-        let data = await request('/tournaments/'+tournament);
+      async function seeTournament(e) {
+        let data = await request("/tournaments/" + tournament);
+        e.parentElement.innerHTML += JSON.stringify(data);
+        let currentBracket = data.bracket.at(-1);
+        table.innerHTML = '';
+        for (let match of currentBracket) {
+          let tr = create('tr');
+          tr.appendChild(create('td',match.id));
+          tr.appendChild(create('td',match.team1.name))
+          tr.appendChild(create('td',match.team2.name))
+          tr.appendChild(create('td',match.winner?.name))
+          tr.appendChild(create('td',match.score));
+          let button = create('button','set Results');
+          tr.appendChild(button);
+          button.on('click',e=>{
+            updateMatch(match.id)
+          });
+          table.appendChild(tr);
+        }
+      }
+
+      async function startTournament(e) {
+        let data = await request("/start-tournament/" + tournament, {
+          method: "POST",
+        });
         e.parentElement.innerHTML += JSON.stringify(data);
       }
 
-      async function startTournament(e){
-        let data = await request('/start-tournament/'+tournament,{method:'POST'});
-        e.parentElement.innerHTML += JSON.stringify(data);
+      async function updateMatch(id) {
+        let winner = prompt('Enter Winner');
+        let data = await request('/matchResults/'+id,{method:"POST",body:JSON.stringify({winner})});
+        table.innerHTML += data;
       }
+
+      async function generateNextBracket() {}
 
       main();
     </script>

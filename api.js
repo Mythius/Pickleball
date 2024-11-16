@@ -1,10 +1,10 @@
 // const db = require('./db.js');
 const md5 = require("md5");
-const { Tournament, Team } = require("./tournament");
+const { Tournament, Team, Pairing } = require("./tournament");
 
 let tournaments = [];
 
-function getTournamentById(id, res) {
+function getTournamentById(id) {
   for (let t of tournaments) {
     if (t.id == id) return t;
   }
@@ -44,6 +44,10 @@ exports.public = function (app) {
   });
 
   app.get("/tournaments/:id", (req, res) => {
+    if (!(req.params.id in Tournament.all)) {
+      res.send({ message: "Tournament Not Found" });
+      return;
+    }
     res.send(getTournamentById(req.params.id));
   });
 
@@ -75,7 +79,7 @@ exports.private = function (app) {
       tournaments.splice(ix, 1);
       res.send({ message: "Success" });
     } else {
-      res.send({message:'Tournament not found'});
+      res.send({ message: "Tournament not found" });
     }
   });
 
@@ -97,6 +101,25 @@ exports.private = function (app) {
     }
     tournament.initializeBracket();
     res.send({ message: "Success", data: tournament.currentRound });
+  });
+  app.post("/matchResults/:matchId", (req, res) => {
+    let id = req.params.matchId;
+    let body = req.body;
+    if (!(id in Pairing.finder)) {
+      res.send({ message: "Match not Found" });
+      return;
+    }
+    let pairing = Pairing.finder[id];
+    if (
+      pairing.team1.name == body.winner ||
+      pairing.team2.name == body.winner
+    ) {
+      let t = Tournament.all[pairing.tournament_id];
+      t.updateMatch(id, body.winner, body.score);
+      res.send({message:'Success'});
+    } else {
+      res.send({ message: "Not Updated", detail: `${body.winner} is not in match ${id}` });
+    }
   });
 };
 
