@@ -26,3 +26,8 @@ The backend service is requires authentication, and is ready and availiable to r
 
 Currently My backend service is live at https://backend.msouthwick.com/. 
 My front end service is alive https://startup.web260.msouthwick.com/
+
+## Nov 16 Updates
+The backend service is completely functional wth the ability to create, organize, update and delete tournaments.
+The front end recieved minor updates to create tournaments, but does not utilize the full capabilities of the backend service.
+The backend service is running on a separte url, and has cors enabled in order to talk to the front end. 
