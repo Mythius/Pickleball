@@ -15,7 +15,8 @@
   "description": "Pickleball Web Application",
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/mythius/pickleball/issues"
   },
-  "homepage": "https://github.com/mythius/pickleball#readme"
+  "homepage": "https://github.com/mythius/pickleball#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
