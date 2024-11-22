@@ -27,6 +27,14 @@ The backend service is requires authentication, and is ready and availiable to r
 Currently My backend service is live at https://backend.msouthwick.com/. 
 My front end service is alive https://startup.web260.msouthwick.com/
 
+### React Startup Requirements
+- My GitHub Repository Demonstrates Ownership
+- I Bundled it with vite + react
+- I have a react component for everything on the page see https://github.com/Mythius/Pickleball/tree/react/src/components for a list of all the components I used
+- I used the react router to switch between the pages ( see app.js )
+- I used react hooks for dynamically creating components, see MyTourneys.js or any of the pages
+
+
 ## Nov 16 Updates
 The backend service is completely functional wth the ability to create, organize, update and delete tournaments.
 The front end recieved minor updates to create tournaments, but does not utilize the full capabilities of the backend service.
