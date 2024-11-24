@@ -1,6 +1,7 @@
 // const db = require('./db.js');
 const md5 = require("md5");
 const { Tournament, Team, Pairing } = require("./tournament");
+const mongo = require("./mongo");
 
 let tournaments = [];
 
@@ -12,21 +13,51 @@ function getTournamentById(id) {
   return false;
 }
 
-// Example usage
-// let participants = ['Alice', 'Bob', 'Charlie', 'Dave', 'Eve', 'Frank','Person 2','Person 3','Person 4'];
-// let tournament = new Tournament(participants, 'single');
-// tournament.initializeBracket();
-// console.log('First round:', tournament.currentRound);
+function checkAndCreateTournamentCollection() {
+  mongo.connect(async (db) => {
+    const collections = await db
+      .listCollections({ name: "tournament" })
+      .toArray();
 
-// tournament.updateMatch(0, 0, 'Alice');
-// tournament.updateMatch(0, 1, 'Charlie');
-// tournament.updateMatch(0, 2, 'Eve');
-// tournament.updateMatch(0, 3, 'Person 2');
-// tournament.updateMatch(0, 4, 'Person 4');
+    if (collections.length === 0) {
+      console.log("Tournament collection does not exist. Creating it...");
+      await db.createCollection("tournament");
+      console.log("Tournament collection created.");
+    } else {
+      console.log("Tournament collection already exists.");
+    }
+  });
+}
 
-// tournament.generateNextRound();
-// console.log('Next round:', tournament.currentRound);
-// console.log(JSON.stringify(tournament));
+function saveTournament(t, n = false) {
+  mongo.connect(async (db) => {
+    let tournament = t;
+    let tournament_id = t.id;
+    const result = await collection.updateOne(
+      { _id: tournamentId }, // Use tournamentId as the unique identifier
+      { $set: tournamentData }, // Update the tournament data
+      { upsert: true } // Create a new document if one doesn't exist
+    );
+
+    if (result.upsertedCount > 0) {
+      console.log("Tournament created:", result.upsertedId._id);
+    } else {
+      console.log("Tournament updated:", tournamentId);
+    }
+  });
+}
+
+function deleteTournament(tournament) {
+  mongo.connect(async (db) => {
+    const collection = db.collection("tournament");
+    const result = await collection.deleteOne({ _id: tournamentId });
+    if (result.deletedCount > 0) {
+      console.log("Tournament deleted:", tournamentId);
+    } else {
+      console.log("Tournament not found:", tournamentId);
+    }
+  });
+}
 
 exports.public = function (app) {
   app.get("/hello", (req, res) => {
@@ -70,6 +101,7 @@ exports.private = function (app) {
     nt.owner = req.session.username;
     tournaments.push(nt);
     res.send({ message: "Success", id: nt.id });
+    saveTournament(nt);
   });
 
   app.delete("/tournament/:id", (req, res) => {
@@ -81,6 +113,7 @@ exports.private = function (app) {
     } else {
       res.send({ message: "Tournament not found" });
     }
+    deleteTournament(t);
   });
 
   app.post("/join-tournament/:id/:name", (req, res) => {
@@ -101,6 +134,7 @@ exports.private = function (app) {
     }
     tournament.initializeBracket();
     res.send({ message: "Success", data: tournament.currentRound });
+    saveTournament(t);
   });
   app.post("/matchResults/:matchId", (req, res) => {
     let id = req.params.matchId;
@@ -116,12 +150,19 @@ exports.private = function (app) {
     ) {
       let t = Tournament.all[pairing.tournament_id];
       t.updateMatch(id, body.winner, body.score);
-      res.send({message:'Success'});
+      res.send({ message: "Success" });
     } else {
-      res.send({ message: "Not Updated", detail: `${body.winner} is not in match ${id}` });
+      res.send({
+        message: "Not Updated",
+        detail: `${body.winner} is not in match ${id}`,
+      });
     }
+    saveTournament(t);
   });
 };
+
+
+checkAndCreateTournamentCollection();
 
 let data = {};
 
