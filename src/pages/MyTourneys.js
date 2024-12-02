@@ -9,6 +9,10 @@ import Tournament from "../components/Tournament/Tournament";
 const MyTourneys = () => {
   const [tournaments, setTournaments] = useState([]); // Set initial state to an array
 
+  
+  localStorage.setItem('tid','');
+  localStorage.setItem('tname','');
+
   // Function to fetch tournaments from the API
   async function fetchTournaments() {
     try {
@@ -28,6 +32,8 @@ const MyTourneys = () => {
     try {
       // Prompt for the tournament name
       let name = await createPromptBox("Enter Tournament Name");
+
+      if(!name) return;
 
       // Make the POST request to add the tournament
       let response = await window.request("/tournament", {

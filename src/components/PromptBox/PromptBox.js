@@ -9,8 +9,10 @@ const PromptBox = ({ label, confirmText, callback }) => {
   function updateValue(e){
     value = e.target.value;
   }
+  function cancel(){
+    callback('');
+  }
 
-  
   setTimeout(() => {
     let c = document.querySelector('.PromptBox');
     c?.querySelector("input")?.focus();
@@ -27,6 +29,7 @@ const PromptBox = ({ label, confirmText, callback }) => {
       <h4>{label}</h4>
       <input onChange={updateValue}/>
       <button onClick={clicked}>{confirmText ? confirmText : "Submit"}</button>
+      <button onClick={cancel}>Cancel</button>
     </div>
   );
 };

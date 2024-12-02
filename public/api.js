@@ -1,9 +1,11 @@
 var auth_token = localStorage.getItem('auth_token');
+if(auth_token==='undefined') auth_token=undefined;
 async function login(username, password) {
     let authorization = JSON.stringify({ username, password });
     let req = await fetch('https://backend.msouthwick.com/auth', { method: 'POST', headers: { authorization } });
     let dat = await req.json();
     auth_token = dat.token;
+    localStorage.setItem('auth_token',auth_token);
     return JSON.stringify(dat);
 }
 async function request(url, data = {}) {

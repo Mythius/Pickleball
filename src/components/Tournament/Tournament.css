@@ -1,8 +1,11 @@
 .Tournament {
-    width: 60%;
-    background-color: antiquewhite;
+    width: 100%;
+    background-color: white;
     padding: 10px;
     margin: 10px;
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
 }
 .Tournament img{
     height: 28px;
