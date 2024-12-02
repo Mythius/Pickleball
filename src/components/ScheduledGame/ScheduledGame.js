@@ -11,7 +11,7 @@ const ScheduledGame = (props) => {
           <div className="game-content">{props.team2}</div>
         </div>
         <div className="game-content">
-          Round {props.round} - {props.time}
+          Round {props.round}
           <br />
           {props.court}
         </div>

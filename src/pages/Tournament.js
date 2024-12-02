@@ -3,14 +3,17 @@ import ScheduledGame from "../components/ScheduledGame/ScheduledGame";
 import Menu from "../components/menu/menu";
 import Footer from "../components/Footer/Footer";
 import { useEffect, useState } from "react";
+import AddButton from "../components/AddButton/AddButton";
 
 const Tournament = () => {
   let [data, setData] = useState([], <centered>Loading...</centered>);
+  let [started,setStarted] = useState([],false);
 
   async function getTournamentData() {
     let tid = localStorage.tid;
     if (!tid) window.location = "my-tourneys";
     let tdata = await window.request("/tournaments/" + tid);
+    setStarted(!tdata.open);
     if (tdata.open) {
       let players = tdata.participants.map((e) => e.name);
       setData(
@@ -21,20 +24,32 @@ const Tournament = () => {
           ))}
         </centered>
       );
+    } else {
+      let i = 0;
+      games = tdata.currentRound.map(e=>{
+        return {
+          round: 1,
+          court: `Game ${++i}`,
+          teams: [{players:[e.team1.name]},{players:[e.team2.name]}]
+        }
+      })
+      setData(
+        generateGames()
+      )
     }
+  }
+
+  async function startTournament(){
+    let msg = await window.request('/start-tournament/'+localStorage.tid,{method:'POST'});
+    getTournamentData();
+    console.log(msg);
   }
 
   useEffect(() => {
     getTournamentData();
   }, []);
 
-  let games = [
-    {
-      time: "1:00",
-      court: "Court 2",
-      teams: [{ players: ["Person 1"] }, { players: ["Person 2"] }],
-    },
-  ];
+  let games;
 
   function getData() {
     return data;
@@ -45,7 +60,7 @@ const Tournament = () => {
     for (let game of games) {
       rows.push(
         <ScheduledGame
-          time={game.time}
+          round={game.round}
           court={game.court}
           team1={game.teams[0].players.join()}
           team2={game.teams[1].players.join()}
@@ -60,7 +75,9 @@ const Tournament = () => {
       <div>
         <NavigationBar />
         <Menu />
-        {data}
+        <main style={{position:'absolute',top:'80px',width:'100%'}}>{data}</main>
+        {started?'':<AddButton onClick={startTournament} symbol="►" />}
+        {/* <AddButton style={{transform:'translateY(-100px)'}} onClick={startTournament} symbol="&#83;&#104;&#97;&#114;&#101;&#33;" /> */}
         <Footer />
       </div>
     </div>
