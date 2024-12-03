@@ -32,6 +32,14 @@ div.game {
   border-bottom: 1px solid black;
 }
 
+.game .winner{
+  background: #85ff83;
+}
+
+.game .loser{
+  background: #ff7c7c;
+}
+
 .game > div:last-child {
   padding: 20px;
 }

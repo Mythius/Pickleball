@@ -4,6 +4,13 @@ import GameResult from "../components/GameResult/GameResult";
 import Footer from "../components/Footer/Footer";
 
 const History = () => {
+
+
+  async function getHistory(){
+    
+  }
+
+
   let history = [
     { matchNum: 1, result: "Loss", score: "11 - 6" },
     { matchNum: 2, result: "Win", score: "8 - 11" },
