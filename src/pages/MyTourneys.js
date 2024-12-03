@@ -9,9 +9,8 @@ import Tournament from "../components/Tournament/Tournament";
 const MyTourneys = () => {
   const [tournaments, setTournaments] = useState([]); // Set initial state to an array
 
-  
-  localStorage.setItem('tid','');
-  localStorage.setItem('tname','');
+  localStorage.setItem("tid", "");
+  localStorage.setItem("tname", "");
 
   // Function to fetch tournaments from the API
   async function fetchTournaments() {
@@ -33,7 +32,7 @@ const MyTourneys = () => {
       // Prompt for the tournament name
       let name = await createPromptBox("Enter Tournament Name");
 
-      if(!name) return;
+      if (!name) return;
 
       // Make the POST request to add the tournament
       let response = await window.request("/tournament", {
@@ -58,7 +57,9 @@ const MyTourneys = () => {
       <Menu />
       <div className="main">
         {tournaments.length > 0 ? (
-          tournaments.map((e) => <Tournament key={e.id} name={e.name} id={e.id} />)
+          tournaments.map((e) => (
+            <Tournament key={e.id} name={e.name} id={e.id} />
+          ))
         ) : (
           <p>No tournaments available.</p>
         )}
