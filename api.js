@@ -189,6 +189,7 @@ exports.private = function (app) {
     ) {
       let t = Tournament.all[pairing.tournament_id];
       t.updateMatch(id, body.winner, body.score);
+      saveTournament(t);
       res.send({ message: "Success" });
     } else {
       res.send({
@@ -196,7 +197,6 @@ exports.private = function (app) {
         detail: `${body.winner} is not in match ${id}`,
       });
     }
-    saveTournament(t);
   });
 };
 

@@ -10,7 +10,8 @@ class Pairing {
   static finder = {};
   static getPairings(name){
     let games = [];
-    for(let pair in Pairing.finder){
+    for(let code in Pairing.finder){
+      let pair = Pairing.finder[code];
       if(pair.team1?.name === name || pair.team2?.name === name){
         games.push(pair);
       }
