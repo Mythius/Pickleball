@@ -42,3 +42,6 @@ The backend service is running on a separte url, and has cors enabled in order t
 
 ## Login
 I elected to use a third party service for logging in, and I integrated the google login api. I do also have a mongo database connected, but I don't use it to store login information, I just use it for saving tournament data. 
+
+## Dec 2 Updates
+Backend and Front end itegrated. Web Sockets has not yet been integrated, so after almost every action you must refresh the page. 
