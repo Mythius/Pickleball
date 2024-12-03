@@ -53,7 +53,7 @@ function saveTournament(t, n = false) {
     );
 
     if (result.upsertedCount > 0) {
-      console.log("Tournament created:", result.upsertedId._id);
+      console.log("Tournament created:", tournament_id);
     } else {
       console.log("Tournament updated:", tournament_id);
     }
@@ -69,9 +69,9 @@ function deleteTournament(tournament) {
     if(!id) return;
     const result = await collection.deleteOne({ _id: id });
     if (result.deletedCount > 0) {
-      console.log("Tournament deleted:", tournamentId);
+      console.log("Tournament deleted:", id);
     } else {
-      console.log("Tournament not found:", tournamentId);
+      console.log("Tournament not found:", id);
     }
   });
 }
