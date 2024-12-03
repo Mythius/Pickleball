@@ -52,6 +52,7 @@ const Tournament = () => {
   }
 
   async function startTournament() {
+    setShare(false);
     let msg = await window.request("/start-tournament/" + localStorage.tid, {
       method: "POST",
     });

@@ -21,7 +21,7 @@ async function loadProfile() {
   } else if (window.location.hostname == "localhost" && !window.auth_token) {
     let t = await window.login("test", "test");
     console.log(t);
-  } else if (!window.auth_token && window.location.hostname !== "localhost") {
+  } else if (!window.auth_token && window.location.hostname !== "localhost" && window.location.pathname !== '/') {
     window.location.href = "/";
   }
 }
