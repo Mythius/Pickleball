@@ -21,11 +21,14 @@ function checkAndCreateTournamentCollection() {
 
     if (collections.length === 0) {
       console.log("Tournament collection does not exist. Creating it...");
-      await db.createCollection("tournament");
+      await db.createCollection("tournaments");
       console.log("Tournament collection created.");
     } else {
       console.log("Tournament collection already exists.");
     }
+
+    tournaments = await db.collection('tournaments').find().toArray();
+    console.log(tournaments)
   });
 }
 
@@ -33,9 +36,10 @@ function saveTournament(t, n = false) {
   mongo.connect(async (db) => {
     let tournament = t;
     let tournament_id = t.id;
-    const result = await collection.updateOne(
-      { _id: tournamentId }, // Use tournamentId as the unique identifier
-      { $set: tournamentData }, // Update the tournament data
+    let tournamentCollection = db.collection('tournaments');
+    const result = await tournamentCollection.updateOne(
+      { _id: tournament_id }, // Use tournamentId as the unique identifier
+      { $set: tournament }, // Update the tournament data
       { upsert: true } // Create a new document if one doesn't exist
     );
 
@@ -49,7 +53,9 @@ function saveTournament(t, n = false) {
 
 function deleteTournament(tournament) {
   mongo.connect(async (db) => {
-    const collection = db.collection("tournament");
+    const collection = db.collection("tournaments");
+    let id = await collection.find({name:tournament.name}).toArray()[0]._id;
+    if(!id) return;
     const result = await collection.deleteOne({ _id: tournamentId });
     if (result.deletedCount > 0) {
       console.log("Tournament deleted:", tournamentId);
@@ -87,6 +93,11 @@ exports.public = function (app) {
     if (!t) return;
     req.send({ message: "Success", data: tournament.currentRound });
   });
+  
+  app.get('/results/:name',(req,res)=>{
+    let games = Pairing.getPairings(req.params.name);
+    res.send({games});
+  })
 };
 
 exports.private = function (app) {
@@ -105,6 +116,7 @@ exports.private = function (app) {
   });
 
   app.delete("/tournament/:id", (req, res) => {
+    if(!verifyOwnership(req,res)) return;
     let t = tournaments.filter((e) => e.id == req.params.id)?.[0];
     let ix = tournaments.indexOf(t);
     if (ix != -1) {
@@ -126,7 +138,23 @@ exports.private = function (app) {
     res.send({ message: j ? "Success" : "Couldn't Join" });
   });
 
+  app.delete("/join-tournament/:id/:name", (req, res) => {
+    if(!verifyOwnership(req,res)) return;
+    let id = req.params.id;
+    let name = req.params.name;
+    let tournament = getTournamentById(id);
+    if (!tournament) return;
+    let n = 0;
+    tournament.removeParticipant((p) => {
+      let r = p.name === name;
+      if(r) n++;
+      return r;
+    });
+    res.send({message:'Success',teamsRemoved:n});
+  });
+
   app.post("/start-tournament/:id", (req, res) => {
+    if(!verifyOwnership(req,res)) return;
     let tournament = getTournamentById(req.params.id);
     if (!tournament) return;
     if (tournament.owner !== req.session.username) {
@@ -134,7 +162,7 @@ exports.private = function (app) {
     }
     tournament.initializeBracket();
     res.send({ message: "Success", data: tournament.currentRound });
-    saveTournament(t);
+    saveTournament(tournament);
   });
   app.post("/matchResults/:matchId", (req, res) => {
     let id = req.params.matchId;
@@ -161,6 +189,21 @@ exports.private = function (app) {
   });
 };
 
+function verifyOwnership(req,res){
+  let tournament = getTournamentById(req.params.id);
+  if(!tournament){
+    res.send({message:'Tournament not found'});
+    return false;
+  }
+
+  return true; // IMPORTANT: Remove to have stricter permissions
+
+  if(tournament.owner !== req.session.username){
+    res.send({message:'Not Owner'});
+    return false;
+  }
+  return true;
+}
 
 checkAndCreateTournamentCollection();
 

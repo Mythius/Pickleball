@@ -8,6 +8,15 @@ class Team {
 
 class Pairing {
   static finder = {};
+  static getPairings(name){
+    let games = [];
+    for(let pair in Pairing.finder){
+      if(pair.team1?.name === name || pair.team2?.name === name){
+        games.push(pair);
+      }
+    }
+    return games;
+  }
   constructor(tournament,team1, team2) {
     this.team1 = team1;
     this.team2 = team2;
@@ -45,6 +54,13 @@ class Tournament {
   addParticipant(participant) {
     if (this.open) return this.participants.push(participant);
     return false;
+  }
+
+  removeParticipant(callback){
+    for(let i=this.participants.length-1;i>=0;i--){
+      let del = callback(this.participants[i]);
+      if(del) this.participants.splice(i,1);
+    }
   }
 
   // Initialize the tournament with first round pairings
