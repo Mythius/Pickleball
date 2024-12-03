@@ -51,6 +51,14 @@ class Tournament {
     Tournament.all[this.id] = this;
   }
 
+  loadData(data){
+    delete Tournament.all[this.id];
+    Tournament.all[data.id] = this;
+    for(let thing in data){
+      this[thing] = data[thing];
+    }
+  }
+
   addParticipant(participant) {
     if (this.open) return this.participants.push(participant);
     return false;

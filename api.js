@@ -16,7 +16,7 @@ function getTournamentById(id) {
 function checkAndCreateTournamentCollection() {
   mongo.connect(async (db) => {
     const collections = await db
-      .listCollections({ name: "tournament" })
+      .listCollections({ name: "tournaments" })
       .toArray();
 
     if (collections.length === 0) {
@@ -27,9 +27,18 @@ function checkAndCreateTournamentCollection() {
       console.log("Tournament collection already exists.");
     }
 
-    tournaments = await db.collection('tournaments').find().toArray();
-    console.log(tournaments)
+    let tournament_data = await db.collection('tournaments').find().toArray();
+    loadTournaments(tournament_data);
   });
+}
+
+function loadTournaments(trs){
+  console.log(`Loading ${trs.length} tournaments`);
+  for(let t of trs){
+    let nt = new Tournament(t.name,t.type);
+    nt.loadData(t);
+    tournaments.push(nt);
+  }
 }
 
 function saveTournament(t, n = false) {
@@ -46,17 +55,19 @@ function saveTournament(t, n = false) {
     if (result.upsertedCount > 0) {
       console.log("Tournament created:", result.upsertedId._id);
     } else {
-      console.log("Tournament updated:", tournamentId);
+      console.log("Tournament updated:", tournament_id);
     }
   });
 }
 
+
 function deleteTournament(tournament) {
   mongo.connect(async (db) => {
     const collection = db.collection("tournaments");
-    let id = await collection.find({name:tournament.name}).toArray()[0]._id;
+    let trns = await collection.find({name:tournament.name}).toArray();
+    let id = trns?.[0]?._id;
     if(!id) return;
-    const result = await collection.deleteOne({ _id: tournamentId });
+    const result = await collection.deleteOne({ _id: id });
     if (result.deletedCount > 0) {
       console.log("Tournament deleted:", tournamentId);
     } else {

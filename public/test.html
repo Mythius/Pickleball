@@ -77,6 +77,7 @@
         e.parentElement.innerHTML += JSON.stringify(data);
         let currentBracket = data.bracket.at(-1);
         table.innerHTML = '';
+        if(!currentBracket) return;
         for (let match of currentBracket) {
           let tr = create('tr');
           tr.appendChild(create('td',match.id));
