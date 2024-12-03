@@ -4,10 +4,12 @@ import Menu from "../components/menu/menu";
 import Footer from "../components/Footer/Footer";
 import { useEffect, useState } from "react";
 import AddButton from "../components/AddButton/AddButton";
+import Share from "../components/Share/Share";
 
 const Tournament = () => {
   let [data, setData] = useState([], <centered>Loading...</centered>);
   let [started,setStarted] = useState([],false);
+  let [share,setShare] = useState([],false);
 
   async function getTournamentData() {
     let tid = localStorage.tid;
@@ -46,6 +48,7 @@ const Tournament = () => {
   }
 
   useEffect(() => {
+    setShare(false);
     getTournamentData();
   }, []);
 
@@ -70,6 +73,10 @@ const Tournament = () => {
     return rows;
   }
 
+  function toggleShare(){
+    setShare(!share);
+  }
+
   return (
     <div>
       <div>
@@ -77,7 +84,8 @@ const Tournament = () => {
         <Menu />
         <main style={{position:'absolute',top:'80px',width:'100%'}}>{data}</main>
         {started?'':<AddButton onClick={startTournament} symbol="►" />}
-        {/* <AddButton style={{transform:'translateY(-100px)'}} onClick={startTournament} symbol="&#83;&#104;&#97;&#114;&#101;&#33;" /> */}
+        {started?'':<AddButton transform='translateY(-120%)' onClick={toggleShare} symbol="share" />}
+        {share?<Share url={window.location.href}/>:''}
         <Footer />
       </div>
     </div>

@@ -38,7 +38,6 @@
 }
 
 centered {
-  margin-top: 80px;
   text-align: center;
   display: flex;
   flex-direction: column;
