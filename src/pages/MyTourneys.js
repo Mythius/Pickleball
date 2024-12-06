@@ -12,6 +12,9 @@ const MyTourneys = () => {
   
   const {updatedAt} = useSocket();
 
+  localStorage.setItem('tid','');
+  localStorage.setItem('tname','');
+
   // Function to fetch tournaments from the API
   async function fetchTournaments() {
     try {

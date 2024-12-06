@@ -23,9 +23,9 @@
   top: 4em;
   text-align: center;
   width: 100%;
-  height: calc(100% - 4em);
+  height: calc(100% - 123px);
   display: flex;
   align-items: center;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: scroll;
 }

@@ -43,3 +43,9 @@ centered {
   flex-direction: column;
   align-items: center;
 }
+
+.main, main{
+  height: calc(100% - 123px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
