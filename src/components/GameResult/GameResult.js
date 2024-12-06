@@ -4,7 +4,7 @@ import './GameResult.css';
 
 const GameResult = (props) => (
   <div className={"result "+props.result.toLowerCase()}>
-    <div>Match {props.matchNum}</div>
+    <div>{props.matchName}</div>
     <div>{props.score}</div>
     <div>{props.result}</div>
   </div>
@@ -13,7 +13,7 @@ const GameResult = (props) => (
 GameResult.propTypes = {};
 
 GameResult.defaultProps = {
-  matchNum: 1,
+  matchName: 'Match 1',
   score: '10 - 12',
   result: 'Won'
 };
