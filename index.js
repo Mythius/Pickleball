@@ -17,13 +17,21 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const io = new Server(http, {
   cors: {
-    origin: "https://startup.web260.msouthwick.com", // Your React app's URL
-    methods: ["GET", "POST"], // Allowed HTTP methods
+    origin: (origin, callback) => {
+      const allowedOrigin = "https://startup.web260.msouthwick.com";
+      if (origin && origin.startsWith(allowedOrigin)) {
+        callback(null, allowedOrigin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST"],
   },
 });
 
-io.on('connection',socket=>{
-    console.log('User Connected');
+
+io.on("connection", (socket) => {
+  console.log("User Connected");
 });
 
 app.use(cors());
@@ -119,11 +127,14 @@ app.post("/google-signin", async (req, res) => {
 
 API.public(app);
 
-const exemptPaths = ['/socket.io', '/public'];
+const exemptPaths = ["/socket.io", "/public"];
 
 app.use(function (req, res, next) {
   // Skip auth for exempted paths or WebSocket upgrade requests
-  if (exemptPaths.some(path => req.path.startsWith(path)) || req.headers.upgrade === 'websocket') {
+  if (
+    exemptPaths.some((path) => req.path.startsWith(path)) ||
+    req.headers.upgrade === "websocket"
+  ) {
     return next();
   }
 
@@ -144,7 +155,6 @@ app.use(function (req, res, next) {
   req.session = sessions[token];
   next();
 });
-
 
 // TEST with: request('/newuser',{method:'POST',body:JSON.stringify({username:'user2',password:'123456'})});
 app.post("/newuser", (req, res) => {
