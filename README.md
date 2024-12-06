@@ -30,3 +30,4 @@ So As I did most of the CSS last time, and after discussing this with Dr. Clemen
 ### `POST` /start-tournament/:id
 ### `POST` /matchResults/:matchId
 - body: {winner:'Team Name', score: '11 - 7'}
+### `GET` /history
