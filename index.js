@@ -11,7 +11,9 @@ const API = require('./api.js');
 const { file, fs } = require('./file.js');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(google_client_id);
+const http = rquire('http').createServer(app);
 const cors = require('cors');
+const io = require('socket.io')(http);
 
 app.use(cors());
 
@@ -123,5 +125,5 @@ app.post('/newuser', (req, res) => {
     res.json({ message: 'User created Successfully' });
 });
 
-API.private(app);
+API.private(app,io);
 

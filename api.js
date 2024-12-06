@@ -122,7 +122,7 @@ exports.public = function (app) {
   });
 };
 
-exports.private = function (app) {
+exports.private = function (app,io) {
   app.get("/profile", (req, res) => {
     res.send({ src: req.session.google_data.picture });
   });
@@ -135,6 +135,7 @@ exports.private = function (app) {
     tournaments.push(nt);
     res.send({ message: "Success", id: nt.id });
     saveTournament(nt);
+    io.emit('update');
   });
 
   app.delete("/tournament/:id", (req, res) => {
@@ -148,6 +149,7 @@ exports.private = function (app) {
       res.send({ message: "Tournament not found" });
     }
     deleteTournament(t);
+    io.emit('update');
   });
 
   app.post("/join-tournament/:id/:name", (req, res) => {
@@ -158,6 +160,7 @@ exports.private = function (app) {
     let t = new Team(name, req.session.username);
     let j = tournament.addParticipant(t);
     res.send({ message: j ? "Success" : "Couldn't Join" });
+    io.emit('update');
   });
 
   app.delete("/join-tournament/:id/:name", (req, res) => {
@@ -185,6 +188,7 @@ exports.private = function (app) {
     tournament.initializeBracket();
     res.send({ message: "Success", data: tournament.currentRound });
     saveTournament(tournament);
+    io.emit('update');
   });
   app.post("/matchResults/:matchId", (req, res) => {
     let id = req.params.matchId;
@@ -208,6 +212,7 @@ exports.private = function (app) {
         detail: `${body.winner} is not in match ${id}`,
       });
     }
+    io.emit('update');
   });
 
   app.get('/history',async (req,res)=>{
