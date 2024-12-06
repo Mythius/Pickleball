@@ -209,6 +209,19 @@ exports.private = function (app) {
       });
     }
   });
+
+  app.get('/history',async (req,res)=>{
+    let name = req.session.username;
+    let games = await Pairing.getHistory(name);
+    for(let game of games){
+      if(game.winner.people_on_team.includes(name)){
+        game.result = 'Win';
+      } else {
+        game.result = 'Loss';
+      }
+    }
+    res.send({games});
+  })
 };
 
 function verifyOwnership(req,res){
