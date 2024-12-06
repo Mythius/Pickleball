@@ -17,7 +17,7 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const io = new Server(http, {
   cors: {
-    origin: "https://startup.web260.msouthwick.com/", // Your React app's URL
+    origin: "https://startup.web260.msouthwick.com", // Your React app's URL
     methods: ["GET", "POST"], // Allowed HTTP methods
   },
 });
