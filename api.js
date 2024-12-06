@@ -144,12 +144,12 @@ exports.private = function (app,io) {
     let ix = tournaments.indexOf(t);
     if (ix != -1) {
       tournaments.splice(ix, 1);
+      io.emit('update');
       res.send({ message: "Success" });
     } else {
       res.send({ message: "Tournament not found" });
     }
     deleteTournament(t);
-    io.emit('update');
   });
 
   app.post("/join-tournament/:id/:name", (req, res) => {
@@ -159,8 +159,8 @@ exports.private = function (app,io) {
     if (!tournament) return;
     let t = new Team(name, req.session.username);
     let j = tournament.addParticipant(t);
-    res.send({ message: j ? "Success" : "Couldn't Join" });
     io.emit('update');
+    res.send({ message: j ? "Success" : "Couldn't Join" });
   });
 
   app.delete("/join-tournament/:id/:name", (req, res) => {
@@ -186,9 +186,9 @@ exports.private = function (app,io) {
       res.status(403).send({ message: "Not Allowed" });
     }
     tournament.initializeBracket();
+    io.emit('update');
     res.send({ message: "Success", data: tournament.currentRound });
     saveTournament(tournament);
-    io.emit('update');
   });
   app.post("/matchResults/:matchId", (req, res) => {
     let id = req.params.matchId;
@@ -204,6 +204,7 @@ exports.private = function (app,io) {
     ) {
       let t = Tournament.all[pairing.tournament_id];
       t.updateMatch(id, body.winner, body.score);
+      io.emit('update');
       saveTournament(t);
       res.send({ message: "Success" });
     } else {
@@ -212,7 +213,6 @@ exports.private = function (app,io) {
         detail: `${body.winner} is not in match ${id}`,
       });
     }
-    io.emit('update');
   });
 
   app.get('/history',async (req,res)=>{
