@@ -17,9 +17,7 @@ const Tournament = ({ name, id }) => {
     if(!teamName) return;
     let req = await window.request(`/join-tournament/${id}/${teamName}`,{method:'POST'});
     if(req.message=='Success'){
-      window.location=`tournament`;
-      localStorage.setItem('tid',id);
-      localStorage.setItem('tname',teamName);
+      setTimeout(()=>{window.location=`tournament?id=${id}&tname=${teamName}`},350);
     }
   }
 

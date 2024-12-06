@@ -6,14 +6,21 @@ import { useEffect, useState } from "react";
 import AddButton from "../components/AddButton/AddButton";
 import Share from "../components/Share/Share";
 import { createPromptBox } from "../control";
+import { useSocket } from "../SocketContext";
 
 const Tournament = () => {
   let [data, setData] = useState([], <centered>Loading...</centered>);
   let [started, setStarted] = useState([], false);
   let [share, setShare] = useState([], false);
 
+  const {updatedAt} = useSocket();
+
   async function getTournamentData() {
-    let tid = localStorage.tid;
+    let params = new URLSearchParams(window.location.search)
+    let tid = localStorage.tid || params.get('id');
+    let tname = localStorage.tname || params.get('tname');
+    localStorage.setItem('tid',tid);
+    localStorage.setItem('tid',tid);
     if (!tid) window.location = "my-tourneys";
     let tdata = await window.request("/tournaments/" + tid);
     setStarted(!tdata.open);
@@ -63,7 +70,7 @@ const Tournament = () => {
   useEffect(() => {
     setShare(false);
     getTournamentData();
-  }, []);
+  }, [updatedAt]);
 
   let games;
 

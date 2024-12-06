@@ -5,12 +5,12 @@ import AddButton from "../components/AddButton/AddButton";
 import { createPromptBox } from "../control";
 import { useEffect, useState } from "react";
 import Tournament from "../components/Tournament/Tournament";
+import {useSocket} from '../SocketContext';
 
 const MyTourneys = () => {
   const [tournaments, setTournaments] = useState([]); // Set initial state to an array
-
-  localStorage.setItem("tid", "");
-  localStorage.setItem("tname", "");
+  
+  const {updatedAt} = useSocket();
 
   // Function to fetch tournaments from the API
   async function fetchTournaments() {
@@ -49,7 +49,7 @@ const MyTourneys = () => {
   // Fetch tournaments when the component mounts
   useEffect(() => {
     fetchTournaments();
-  }, []); // Empty dependency array to only run once when the component mounts
+  }, [updatedAt]); // Empty dependency array to only run once when the component mounts
 
   return (
     <>
