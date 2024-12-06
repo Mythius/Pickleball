@@ -9,7 +9,7 @@ const History = () => {
 
   async function getHistory() {
     let history = await window.request("/history");
-    if (history.error) return;
+    if (history.error) return [];
     return [...history.games];
   }
 
