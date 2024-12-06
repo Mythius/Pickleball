@@ -5,40 +5,45 @@ import Footer from "../components/Footer/Footer";
 import { useEffect, useState } from "react";
 
 const History = () => {
-  const [history,setHistory] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [historyEls, setHEs] = useState([]);
 
-  async function getHistory(){
-    let history = await window.request('/history');
-    console.log(history);
+  async function getHistory() {
+    let history = await window.request("/history");
+    return [...history.games];
   }
 
-  useEffect(async ()=>{
-    let games = getHistory();
-    let h = games.map(e=>{
-      return {
-        matchName: e.team1.name + ' - ' + e.team2.name,
-        score: e.score,
-        result: e.result
-      }
-    })
-    setHistory(h);
-  },[]);
+  useEffect(() => {
+    async function gh() {
+      let games = await getHistory();
+      if (games.error) return;
+      let h = games.map((e) => {
+        return {
+          matchName: e.team1.name + " - " + e.team2.name,
+          score: e.score,
+          result: e.result,
+        };
+      });
+      setHistory(h);
+      getHistoryElements();
+    }
+    gh();
+  }, []);
 
-
-  function getHistory() {
+  function getHistoryElements() {
     let divs = [];
     for (let h of history) {
       divs.push(
         <GameResult result={h.result} score={h.score} matchName={h.matchName} />
       );
     }
-    return divs;
+    setHEs(divs);
   }
   return (
     <>
       <NavigationBar />
       <Menu />
-      <div className="main">{getHistory()}</div>
+      <div className="main">{historyEls}</div>
       <Footer />
     </>
   );
