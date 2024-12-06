@@ -5,32 +5,30 @@ import Footer from "../components/Footer/Footer";
 import { useEffect, useState } from "react";
 
 const History = () => {
-  const [history, setHistory] = useState([]);
   const [historyEls, setHEs] = useState([]);
 
   async function getHistory() {
     let history = await window.request("/history");
+    if (history.error) return;
     return [...history.games];
   }
 
   useEffect(() => {
     async function gh() {
       let games = await getHistory();
-      if (games.error) return;
       let h = games.map((e) => {
         return {
           matchName: e.team1.name + " - " + e.team2.name,
-          score: e.score,
+          score: e.points,
           result: e.result,
         };
       });
-      setHistory(h);
-      getHistoryElements();
+      getHistoryElements(h);
     }
     gh();
   }, []);
 
-  function getHistoryElements() {
+  function getHistoryElements(history) {
     let divs = [];
     for (let h of history) {
       divs.push(

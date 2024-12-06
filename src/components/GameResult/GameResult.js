@@ -14,7 +14,7 @@ GameResult.propTypes = {};
 
 GameResult.defaultProps = {
   matchName: 'Match 1',
-  score: '10 - 12',
+  score: 'No Score Saved',
   result: 'Won'
 };
 
