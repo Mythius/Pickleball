@@ -45,3 +45,35 @@ I elected to use a third party service for logging in, and I integrated the goog
 
 ## Dec 2 Updates
 Backend and Front end itegrated. Web Sockets has not yet been integrated, so after almost every action you must refresh the page. 
+
+# API Endpoints
+## PUBLIC API ENDPOINTS
+### `GET` /tournaments
+### `GET` /tournaments/:id
+### `GET` /current-round/:id
+
+## PRIVATE API ENDPOINTS
+### `DELETE` /tournament/:id
+### `GET` /profile
+### `POST` /tournament 
+- body: {name: 'My New Tournament'}
+### `POST` /join-tournament/:id/:name
+### `POST` /start-tournament/:id
+### `POST` /matchResults/:matchId
+- body: {winner:'Team Name', score: '11 - 7'}
+### `GET` /history
+
+## Dec 5 Updates
+WebSockets! 
+The App is now completely functional, and tournamnets, results, and players are automatically syncronized accross devices.
+
+# Instructions
+- Sign in Using Google. This occasionally takes up to 2 seconds or can be blocked by your browser as it is technically a 3rd party sign in.
+- Do not use incognito as it will not sign you in
+- Use 3 bars to navigate to my tournaments ( which should be named all tournaments)
+- Click the `+` button to create a tournament
+- Join tournament and select team name.
+- If you need to create multiple teams under one account simply go back to the my tournament page and join tournament a 2nd or 3rd time, etc.
+- The ▶️ button will start the tournament and the share button will provide a qr code to this website
+- After starting, click on any of the boxes to click the winner, this will track your game in your history, and will move the winner on in the tournament.
+- After all matches are complete, the next round of the tournament will begin.
