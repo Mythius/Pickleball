@@ -1,4 +1,5 @@
 let md5 = require("md5");
+const mongo = require("./mongo");
 class Team {
   constructor(team_name, email) {
     this.name = team_name;
@@ -8,17 +9,27 @@ class Team {
 
 class Pairing {
   static finder = {};
-  static getPairings(name){
+  static getPairings(name) {
     let games = [];
-    for(let code in Pairing.finder){
+    for (let code in Pairing.finder) {
       let pair = Pairing.finder[code];
-      if(pair.team1?.name === name || pair.team2?.name === name){
+      if (pair.team1?.name === name || pair.team2?.name === name) {
         games.push(pair);
       }
     }
     return games;
   }
-  constructor(tournament,team1, team2) {
+   static async getHistory(personName){
+    let db = await mongo.connect();    
+    const query = {
+      $or: [
+        { 'team1.people_on_team': personName },
+        { 'team2.people_on_team': personName }
+      ]
+    };
+    return await db.collection('pairings').find(query).toArray();
+  }
+  constructor(tournament, team1, team2) {
     this.team1 = team1;
     this.team2 = team2;
     this.points = "";
@@ -26,14 +37,29 @@ class Pairing {
     this.tournament_id = tournament.id;
     if (!team1) {
       this.winner = team2;
-      this.team1 = {name:'BYE'};
+      this.team1 = { name: "BYE" };
     }
     if (!team2) {
       this.winner = team1;
-      this.team2 = {name:'BYE'};
+      this.team2 = { name: "BYE" };
     }
     this.id = md5(this.team1.name + this.team2.name);
     Pairing.finder[this.id] = this;
+  }
+  async saveToDb() {
+    const THIS = this;
+    const db = await mongo.connect();
+    let data = await db.collection("pairings").updateOne(
+      { _id: THIS.id }, // the unique identifier
+      { $set: THIS }, // Update the data
+      { upsert: true } // Create a new document if one doesn't exist
+    );
+    return data;
+  }
+  update(winner,score='Score Not Recorded'){
+    this.winner = winner;
+    this.points = score;
+    this.saveToDb();
   }
 }
 class Tournament {
@@ -52,10 +78,10 @@ class Tournament {
     Tournament.all[this.id] = this;
   }
 
-  loadData(data){
+  loadData(data) {
     delete Tournament.all[this.id];
     Tournament.all[data.id] = this;
-    for(let thing in data){
+    for (let thing in data) {
       this[thing] = data[thing];
     }
   }
@@ -65,10 +91,10 @@ class Tournament {
     return false;
   }
 
-  removeParticipant(callback){
-    for(let i=this.participants.length-1;i>=0;i--){
+  removeParticipant(callback) {
+    for (let i = this.participants.length - 1; i >= 0; i--) {
       let del = callback(this.participants[i]);
-      if(del) this.participants.splice(i,1);
+      if (del) this.participants.splice(i, 1);
     }
   }
 
@@ -87,22 +113,21 @@ class Tournament {
     }
     for (let i = 0; i < participants.length; i += 2) {
       if (i + 1 < participants.length) {
-        pairings.push(new Pairing(this,participants[i], participants[i + 1]));
+        pairings.push(new Pairing(this, participants[i], participants[i + 1]));
       } else {
-        pairings.push(new Pairing(this,participants[i])); // Handle odd number of participants
+        pairings.push(new Pairing(this, participants[i])); // Handle odd number of participants
       }
     }
     return pairings;
   }
 
   // Update the result of a match
-  updateMatch(matchId,name_of_winner,score='') {
+  updateMatch(matchId, name_of_winner, score = "") {
     let match = Pairing.finder[matchId];
     let winner = match.team1.name == name_of_winner ? match.team1 : match.team2;
     let loser = match.team1 === winner ? match.team2 : match.team1;
-    match.points = score
-    match.winner = winner;
-    console.log('Updated Match');
+    match.update(winner,score);
+    console.log("Updated Match");
     // Handle loser in double elimination
     if (this.type === "double" && match.length === 2) {
       this.losersBracket.push(loser);
@@ -126,14 +151,14 @@ class Tournament {
     }
   }
 
-  checkRoundCompletion(){
+  checkRoundCompletion() {
     let finished = true;
     let size = this.currentRound.length;
-    for(let pairing of this.currentRound){
+    for (let pairing of this.currentRound) {
       finished &= !!pairing.winner;
     }
-    if(finished){
-      if(size == 1){
+    if (finished) {
+      if (size == 1) {
         this.active = false;
         this.winner = this.currentRound[0].winner;
       } else {

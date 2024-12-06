@@ -9,12 +9,11 @@ function getTournamentById(id) {
   for (let t of tournaments) {
     if (t.id == id) return t;
   }
-  res.status(404).send({ message: "Tournament not found" });
   return false;
 }
 
 function checkAndCreateTournamentCollection() {
-  mongo.connect(async (db) => {
+  mongo.connect().then(async (db) => {
     const collections = await db
       .listCollections({ name: "tournaments" })
       .toArray();
@@ -27,8 +26,16 @@ function checkAndCreateTournamentCollection() {
       console.log("Tournament collection already exists.");
     }
 
-    let tournament_data = await db.collection('tournaments').find().toArray();
-    loadTournaments(tournament_data);
+    let pairings_collection = await db.listCollections({name:'pairings'}).toArray();
+    if(pairings_collection.length === 0){
+      console.log('Creating Pairing Collection');
+      await db.createCollection("pairings");
+    } else {
+      console.log('Pairing History Found');
+    }
+
+    // let tournament_data = await db.collection('tournaments').find().toArray();
+    // loadTournaments(tournament_data);
   });
 }
 
@@ -42,7 +49,7 @@ function loadTournaments(trs){
 }
 
 function saveTournament(t, n = false) {
-  mongo.connect(async (db) => {
+  mongo.connect().then(async (db) => {
     let tournament = t;
     let tournament_id = t.id;
     let tournamentCollection = db.collection('tournaments');
@@ -62,7 +69,7 @@ function saveTournament(t, n = false) {
 
 
 function deleteTournament(tournament) {
-  mongo.connect(async (db) => {
+  mongo.connect().then(async (db) => {
     const collection = db.collection("tournaments");
     let trns = await collection.find({name:tournament.name}).toArray();
     let id = trns?.[0]?._id;
@@ -109,6 +116,10 @@ exports.public = function (app) {
     let games = Pairing.getPairings(req.params.name);
     res.send({games});
   })
+  app.get('/history/:name',async (req,res)=>{
+    let games = await Pairing.getHistory(req.params.name);
+    res.send({games})
+  });
 };
 
 exports.private = function (app) {
