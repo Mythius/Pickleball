@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="api.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <style>
       td{
         border: 1px solid black;
@@ -33,6 +34,8 @@
         e.innerHTML = text;
         return e;
       }
+
+      const socket = io();
 
       let username = "test";
       let pass = "test";
