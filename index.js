@@ -26,6 +26,7 @@ const io = new Server(http, {
       }
     },
     methods: ["GET", "POST"],
+    transports: ["websocket", "polling"], // WebSocket and polling enabled
   },
 });
 
